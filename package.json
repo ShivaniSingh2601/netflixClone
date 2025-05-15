@@ -1,0 +1,31 @@
+{
+  "name": "netflix-clone",
+  "version": "1.0.0",
+  "description": "\"This is clone of netflix\"",
+  "scripts": {
+    "start": "npx parcel index.html",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShivaniSingh2601/netflixClone.git"
+  },
+  "keywords": [
+    "react",
+    "parcel",
+    "jest"
+  ],
+  "author": "Shivani Singh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShivaniSingh2601/netflixClone/issues"
+  },
+  "homepage": "https://github.com/ShivaniSingh2601/netflixClone#readme",
+  "devDependencies": {
+    "parcel": "^2.14.4"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}
