@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 
 const AppLayout = () => {
 
-    return (<>Hello</>
+    return (<h1 className="text-red-600">Hello</h1>
     )
 }
 

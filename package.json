@@ -25,7 +25,10 @@
     "parcel": "^2.14.4"
   },
   "dependencies": {
+    "@parcel/transformer-postcss": "^2.15.0",
+    "@tailwindcss/postcss": "^4.1.6",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.6"
   }
 }
