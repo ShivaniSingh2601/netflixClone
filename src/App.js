@@ -1,10 +1,12 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-// import "./scss/index.css";
+import Login from "./components/Login";
 
 const AppLayout = () => {
 
-    return (<h1 className="text-red-600">Hello</h1>
+    return (<div className="relative">
+      <Login/>
+    </div>
     )
 }
 
