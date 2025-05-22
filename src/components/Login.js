@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from "../utlis/firbase"
 
 function Login() {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -7,17 +9,51 @@ function Login() {
   const passwordRef = useRef(null);
 
   const onClickHandler = () => {
-    const emailValidate =(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(emailRef.current.value);
-    const passwordValidate = (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])(.{8,})$/).test(passwordRef.current.value);
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+
+    const emailValidate = (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email);
+    const passwordValidate = (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])(.{8,})$/).test(password);
     if(!emailValidate){
-      setErrorMessage("Please Enter valid email");
+      setErrorMessage("Please enter a valid email");
+      return 
     }
     else if(!passwordValidate){
-      setErrorMessage("Invalid Password");
+      setErrorMessage("Invalid Password"); 
+      return
     }
-    setErrorMessage(" "); 
-    console.log(emailRef.current.value,passwordRef.current.value);
-    console.log(emailValidate,passwordValidate)
+    if(errorMessage !== ""){return}
+    setErrorMessage(""); 
+    if(!isSignInForm){
+      createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up 
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        setErrorMessage(errorCode +"-"+ errorMessage);
+      });
+
+    }
+    else {
+      signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(user)
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage(errorCode +"-"+ errorMessage);
+      });
+    }
+    
   }
 
   return (
@@ -70,7 +106,7 @@ function Login() {
           <p className="text-xs cursor-pointer" onClick={()=>setIsSignInForm(prev=>!prev)}>
             {isSignInForm?"New to Netflix? Sign Up Now":"Already registered? Sign In Now"}
           </p>
-          <p className="text-red-600 text-center text-xs mt-2">{errorMessage}</p>
+          {errorMessage && <p className="text-red-600 text-center text-xs mt-2">{errorMessage}</p>}
         </form>
       </div>
     </>
