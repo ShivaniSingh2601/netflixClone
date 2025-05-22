@@ -1,7 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function Login() {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage,setErrorMessage]= useState("");
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const onClickHandler = () => {
+    const emailValidate =(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(emailRef.current.value);
+    const passwordValidate = (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])(.{8,})$/).test(passwordRef.current.value);
+    if(!emailValidate){
+      setErrorMessage("Please Enter valid email");
+    }
+    else if(!passwordValidate){
+      setErrorMessage("Invalid Password");
+    }
+    setErrorMessage(" "); 
+    console.log(emailRef.current.value,passwordRef.current.value);
+    console.log(emailValidate,passwordValidate)
+  }
+
   return (
     <>
       <div className="bg-[#000] min-h-[100vh]">
@@ -17,38 +35,42 @@ function Login() {
         />
       </div>
       <div className="bg-[#000000b3] w-[450px] h-[auto] absolute rounded-lg top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-[50px]">
-        <form className="w-[100%] text-[#fff]">
+        <form onSubmit={(e)=>e.preventDefault()} className="w-[100%] text-[#fff]">
           <h1 className="text-[#fff] mb-6 text-[25px]">{isSignInForm?"Sign In":"Sign Up"}</h1>
           {!isSignInForm &&<div className="w-[100%]">
             <input
               type="text"
-              className=" mb-6 p-2 rounded-sm w-[100%] text-sm border-1 border-gray-600"
+              className="bg-[#000000b3] mb-6 p-2 rounded-sm w-[100%] text-sm border border-1 border-[#fbfbfb40]"
               placeholder="Full Name"
             />
           </div>}
           <div className="w-[100%]">
-            <input
+            <input 
+              ref={emailRef}
               type="text"
-              className=" mb-6 p-2 rounded-sm w-[100%] text-sm border-1 border-gray-600"
+              className="bg-[#000000b3] mb-6 p-2 rounded-sm w-[100%] text-sm border border-1 border-[#fbfbfb40]"
               placeholder="Email"
             />
           </div>
           <div className="w-[100%]">
             <input
-              type="text"
-              className=" mb-6 p-2 rounded-sm w-[100%] text-sm border-1 border-gray-600"
+              ref={passwordRef}
+              type="password"
+              className="bg-[#000000b3] mb-6 p-2 rounded-sm w-[100%] text-sm border border-1 border-[#fbfbfb40]"
               placeholder="Password"
             />
           </div>
           <button
             type="button"
             className="w-[100%]  bg-red-700 mb-6 p-2 rounded-sm"
+            onClick={onClickHandler}
           >
             {isSignInForm?"Sign In":"Sign Up"}
           </button>
           <p className="text-xs cursor-pointer" onClick={()=>setIsSignInForm(prev=>!prev)}>
             {isSignInForm?"New to Netflix? Sign Up Now":"Already registered? Sign In Now"}
           </p>
+          <p className="text-red-600 text-center text-xs mt-2">{errorMessage}</p>
         </form>
       </div>
     </>
