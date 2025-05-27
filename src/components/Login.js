@@ -1,16 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 import {auth} from "../utlis/firbase"
+import { useNavigate } from "react-router";
+import Header from "../components/Header";
 
 function Login() {
+  const navigate = useNavigate();
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage,setErrorMessage]= useState("");
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const userNameRef = useRef(null);
+
 
   const onClickHandler = () => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    // const userName = userNameRef.current.value;
 
     const emailValidate = (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email);
     const passwordValidate = (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])(.{8,})$/).test(password);
@@ -29,6 +35,7 @@ function Login() {
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
+        navigate("/browse")
         // ...
       })
       .catch((error) => {
@@ -45,6 +52,7 @@ function Login() {
         // Signed in 
         const user = userCredential.user;
         console.log(user)
+        navigate("/browse")
         // ...
       })
       .catch((error) => {
@@ -58,16 +66,11 @@ function Login() {
 
   return (
     <>
+      <Header></Header> 
       <div className="bg-[#000] min-h-[100vh]">
         <img
           className="opacity-50"
           src="https://assets.nflxext.com/ffe/siteui/vlv3/202ac35e-1fca-44f0-98d9-ea7e8211a07c/web/IN-en-20250512-TRIFECTA-perspective_688b8c03-78cb-46a6-ac1c-1035536f871a_large.jpg"
-        />
-      </div>
-      <div className="absolute top-[10px] left-[150px] z-10 ">
-        <img
-          className="h-[80px]"
-          src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production/consent/87b6a5c0-0104-4e96-a291-092c11350111/01938dc4-59b3-7bbc-b635-c4131030e85f/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
         />
       </div>
       <div className="bg-[#000000b3] w-[450px] h-[auto] absolute rounded-lg top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-[50px]">
@@ -76,6 +79,7 @@ function Login() {
           {!isSignInForm &&<div className="w-[100%]">
             <input
               type="text"
+              ref={userName}
               className="bg-[#000000b3] mb-6 p-2 rounded-sm w-[100%] text-sm border border-1 border-[#fbfbfb40]"
               placeholder="Full Name"
             />

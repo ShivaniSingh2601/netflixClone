@@ -1,14 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Login from "./components/Login";
+import { Provider, useDispatch } from "react-redux";
+import appStore from "./utlis/appStore";
+import Body from "./components/Body";
 
 const AppLayout = () => {
 
-    return (<div className="relative">
-      <Login/>
-    </div>
-    )
-}
+  return (
+    <Provider store={appStore}>
+      <Body/>
+    </Provider>
+  );
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
