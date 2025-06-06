@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword,updateProfile } from "firebase/auth";
 import {auth} from "../utlis/firbase"
 import { useNavigate } from "react-router";
 import Header from "../components/Header";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utlis/userSlice";
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage,setErrorMessage]= useState("");
@@ -16,8 +19,6 @@ function Login() {
   const onClickHandler = () => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    // const userName = userNameRef.current.value;
-
     const emailValidate = (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email);
     const passwordValidate = (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])(.{8,})$/).test(password);
     if(!emailValidate){
@@ -28,6 +29,10 @@ function Login() {
       setErrorMessage("Invalid Password"); 
       return
     }
+    else if(!isSignInForm && userNameRef.current.value === ""){
+      setErrorMessage("Please add userName"); 
+      return
+    }
     if(errorMessage !== ""){return}
     setErrorMessage(""); 
     if(!isSignInForm){
@@ -35,7 +40,16 @@ function Login() {
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
-        navigate("/browse")
+        updateProfile(user, {
+          displayName: userNameRef.current.value, photoURL: "https://lh3.googleusercontent.com/ogw/AF2bZyhCwsehrRnopIu1G5wJdDN-KT2Fi6mKm5vMHwrAP6dbGg=s64-c-mo"
+        }).then(() => {
+          // Profile updated!
+          const { uid, email, displayName, photoURL } = auth.currentUser;
+          dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
+          navigate("/browse")
+        }).catch((error) => {
+          setErrorMessage(error.message)
+        });
         // ...
       })
       .catch((error) => {
@@ -79,7 +93,7 @@ function Login() {
           {!isSignInForm &&<div className="w-[100%]">
             <input
               type="text"
-              ref={userName}
+              ref={userNameRef}
               className="bg-[#000000b3] mb-6 p-2 rounded-sm w-[100%] text-sm border border-1 border-[#fbfbfb40]"
               placeholder="Full Name"
             />
