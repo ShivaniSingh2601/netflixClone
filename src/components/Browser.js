@@ -52,6 +52,11 @@ const Browser = () => {
   return (
     <>
       <Header />
+      <div className="pt-[100px]">
+        <p>Count:</p>
+        <button className="bg-red-700 p-2 m-2">Increament</button>
+        <button className="bg-red-700 p-2 m-2">Decreament</button>
+      </div>
       {/* <form className="p-10 w-[500px]" onSubmit={formik.handleSubmit}>
         <div className="mb-2">
           <input

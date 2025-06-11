@@ -1,10 +1,14 @@
-import React from "react";
+import React,{ useEffect }  from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../utlis/firbase";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { addUser, removeUser } from "../utlis/userSlice";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector(store=>store.user)
     const signOutHandler = () => {
@@ -17,7 +21,24 @@ const Header = () => {
           // An error happened.
         });
     };
-  
+    useEffect(() => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/auth.user
+          const { uid, email, displayName, photoURL } = user;
+          dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
+          navigate("/browse");
+          // ...
+        } else {
+          dispatch(removeUser());
+          navigate("/");
+          // User is signed out
+          // ...
+        }
+      });
+    }, []);
+
   return (<>
     <div className="absolute top-[0px] left-0 right-0">
       <div className="absolute top-[10px] left-[150px] z-10">

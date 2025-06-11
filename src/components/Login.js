@@ -4,7 +4,7 @@ import {auth} from "../utlis/firbase"
 import { useNavigate } from "react-router";
 import Header from "../components/Header";
 import { useDispatch } from "react-redux";
-import { addUser, removeUser } from "../utlis/userSlice";
+import { addUser } from "../utlis/userSlice";
 
 function Login() {
   const dispatch = useDispatch();
@@ -46,7 +46,6 @@ function Login() {
           // Profile updated!
           const { uid, email, displayName, photoURL } = auth.currentUser;
           dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
-          navigate("/browse")
         }).catch((error) => {
           setErrorMessage(error.message)
         });
@@ -64,9 +63,6 @@ function Login() {
       signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
-        const user = userCredential.user;
-        console.log(user)
-        navigate("/browse")
         // ...
       })
       .catch((error) => {
